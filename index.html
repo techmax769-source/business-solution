@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Business Solution — Home</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#eef3f8;
+      --card:#ffffff;
+      --muted:#667085;
+      --accent:#2563eb;
+      --success:#16a34a;
+      --danger:#dc2626;
+      --radius:14px;
+      --glass: rgba(255,255,255,0.6);
+    }
+    *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+
+    body{
+      margin:0;
+      background:linear-gradient(180deg,#f2f6fb 0%, #eef3f8 100%);
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      color:#0f172a;
+    }
+
+    /* NAVBAR AT TOP (now includes navigation links) */
+    .topbar{
+      width:100%;
+      max-width:1000px;
+      padding:12px 20px;
+      margin-top:18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+    }
+    .topbar-left{display:flex;align-items:center;gap:15px;}
+    .topbar-right{display:flex;align-items:center;gap:10px;}
+    .brand{font-weight:800; font-size:18px; letter-spacing:0.2px; color:var(--accent);}
+
+    /* Top Nav Links */
+    .top-nav-item{
+      padding:6px 10px;
+      border-radius:8px;
+      text-decoration:none;
+      color:#1f2937;
+      font-weight:600;
+      transition:background 0.2s;
+      font-size:14px;
+    }
+    .top-nav-item:hover{background:#eef3ff;}
+    .top-nav-item.active{background:#eef3ff;color:var(--accent);}
+
+    /* Menu Toggle Button */
+    .menu-toggle-btn{
+      padding:6px 10px;border-radius:8px;cursor:pointer;color:#1f2937;font-weight:700;
+      background:#f1f5f9;border:1px solid #e2e8f0;font-size:16px;line-height:1;
+    }
+    .menu-toggle-btn:hover{background:#e2e8f0;}
+
+    /* MAIN CARD (smooth top edges) */
+    .main-card{
+      width:100%;
+      max-width:600px; 
+      background:var(--card);
+      margin-top:8px;
+      border-radius:18px; 
+      box-shadow:0 10px 30px rgba(15,23,42,0.08);
+      padding:25px;
+    }
+
+    /* VERTICAL STACKING: Removed .grid and rely on margin-bottom */
+    .field{
+      display:flex;
+      flex-direction:column;
+      margin-bottom: 14px; 
+    }
+    label{font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:600;}
+    input[type="text"], input[type="number"], input[type="date"], select{ /* Added input[type="date"] */
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid #e6eef8;
+      background:#fbfdff;
+      font-size:14px;
+    }
+
+    /* Calculation fields (also stacked vertically) */
+    .calc{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      padding:12px;
+      border-radius:10px;
+      background:linear-gradient(180deg,#f8fafc,#fff);
+      text-align:left;
+      border:1px solid #eef2f7;
+      margin-bottom: 14px; 
+    }
+    .calc .value{font-weight:800;font-size:22px;margin-top:4px;}
+
+    .actions{display:flex;gap:12px;align-items:center;}
+    .btn{
+      padding:10px 14px;border-radius:10px;border:0;font-weight:700;cursor:pointer;
+      transition:background 0.2s;
+    }
+    .btn-primary{background:var(--accent);color:white;}
+    .btn-primary:hover{background:#1d4ed8;}
+    .btn-ghost{background:transparent;border:1px solid #e6eef8;color:var(--muted);}
+    .btn-ghost:hover{background:#f1f5f9;}
+
+    /* entries table */
+    .entries{
+      margin-top:20px;
+      background:var(--card);
+      border-radius:12px;
+      padding:12px;
+      box-shadow:0 6px 18px rgba(12,17,43,0.03);
+    }
+    table{width:100%;border-collapse:collapse;font-size:14px;}
+    th, td{padding:10px;text-align:left;border-bottom:1px solid #f1f5f9;}
+    thead th{color:var(--muted);font-weight:700;font-size:13px;}
+
+    /* weekly card */
+    .weekly{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top:14px;
+      padding:15px; 
+      background:linear-gradient(180deg,var(--accent),#1d4ed8); 
+      color:white;
+      border-radius:12px;
+      font-weight:600;
+    }
+    .weekly .amount{font-size:24px;font-weight:800;}
+
+    /* side drawer */
+    .drawer{
+      position:fixed;
+      left:0;top:0;height:100vh;width:260px;background:linear-gradient(180deg,#fff,#f7fbff);
+      transform:translateX(-110%);
+      transition:transform .28s ease;
+      box-shadow:6px 0 30px rgba(2,6,23,0.12);
+      z-index:80;
+      padding:22px;
+      display:flex; 
+      flex-direction: column; 
+    }
+    .drawer.open{transform:translateX(0);}
+    
+    /* Navigation links in drawer (Default position, takes up space) */
+    .drawer-nav-links {
+        order: 2; 
+        flex-grow: 1; 
+        padding-top: 10px;
+    }
+    .drawer-nav-links a{display:block;padding:10px 6px;color:#0f172a;text-decoration:none;border-radius:8px;margin-bottom:6px;font-weight:600;}
+    .drawer-nav-links a:hover{background:#eef3ff;}
+
+
+    /* Drawer header for close button (Moved back to the top) */
+    .drawer-header {
+      order: 1; 
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0; 
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #e6eef8; 
+      border-top: none; 
+    }
+    .drawer-header h3 {
+        margin:0;
+        color: var(--accent);
+    }
+
+
+    /* Drawer close button */
+    .close-drawer-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--muted);
+      padding: 0;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .close-drawer-btn:hover {
+      color: var(--danger);
+    }
+
+    /* popup */
+    .popup{
+      position:fixed;right:20px;top:20px;padding:12px 16px;border-radius:10px;color:white;font-weight:700;display:none;z-index:90;
+      box-shadow:0 8px 30px rgba(2,6,23,0.18);
+    }
+    .popup.success{background:var(--success);}
+    .popup.loss{background:var(--danger);}
+
+    footer{width:100%;max-width:1000px;margin-top:22px;padding:12px;text-align:center;color:var(--muted);font-weight:600;}
+
+    /* Add this improved .live section style under your existing CSS */
+    .live-text { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 6px; 
+      padding: 4px 8px; 
+      background: rgba(16, 185, 129, 0.12); /* soft green tint */ 
+      border-radius: 8px; 
+      color: var(--success); 
+      font-size: 13px; 
+      font-weight: 700; 
+      text-transform: uppercase; 
+      letter-spacing: 0.4px; 
+    }
+
+    .live-dot { 
+      width: 10px; 
+      height: 10px; 
+      border-radius: 50%; 
+      background-color: var(--success); 
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.9); /* glow effect */ 
+      animation: pulse 1.2s ease-out infinite; 
+    }
+
+    @keyframes pulse { 
+      0% { transform: scale(1); opacity: 1; } 
+      50% { transform: scale(1.5); opacity: 0.5; } 
+      100% { transform: scale(1); opacity: 1; } 
+    }
+
+    /* responsive table for small screens */
+    @media (max-width:560px){
+      table, thead, tbody, th, td, tr{display:block;}
+      thead{display:none;}
+      td{border:none;padding:10px 0;}
+      td:before{content:attr(data-label);display:block;font-weight:700;color:var(--muted);margin-bottom:6px;}
+      .topbar{flex-direction:column;gap:10px;}
+      .topbar-left, .topbar-right{width:100%;justify-content:space-between;}
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="menu-toggle-btn" id="menuBtn" title="Menu">☰</button>
+      <div class="brand" style="margin-left: auto;">Business Solution</div> 
+    </div>
+    <div class="topbar-right">
+      <a class="top-nav-item active" href="index.html">🏠 Home</a>
+      <a class="top-nav-item" href="saved/index.html">💾 Saved Entries</a>
+    </div>
+  </header>
+
+  <nav id="drawer" class="drawer" aria-hidden="true">
+    
+    <div class="drawer-header">
+      <h3>Menu</h3>
+      <button id="closeDrawerBtn" class="close-drawer-btn" title="Close Menu">✖</button>
+    </div>
+
+    <div class="drawer-nav-links">
+        <a href="index.html">🏠 Home</a>
+        <a href="saved/index.html">💾 Saved Entries</a>
+    </div>
+
+  </nav>
+
+  <main class="main-card" role="main" aria-labelledby="main-heading">
+    <h2 id="main-heading" style="margin:0 0 18px 0; border-bottom:1px solid #f1f5f9; padding-bottom:8px;">Daily Entry</h2>
+
+    <div class="field">
+      <label for="date">Date</label>
+      <input id="date" type="date">
+    </div>
+
+    <div class="field">
+      <label for="day">Day</label>
+      <select id="day">
+        <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+        <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="product">Product Name</label>
+      <input id="product" type="text" placeholder="e.g., Desktop">
+    </div>
+
+    <div class="field">
+      <label for="sold">Number Sold</label>
+      <input id="sold" type="number" min="0" step="1" value="0">
+    </div>
+
+    <div class="field">
+      <label for="itemPrice">Each Item Price (KES)</label>
+      <input id="itemPrice" type="number" min="0" step="0.01" value="0">
+    </div>
+
+    <div class="field">
+      <label for="originalPrice">Original Price per Item (KES)</label>
+      <input id="originalPrice" type="number" min="0" step="0.01" placeholder="optional">
+    </div>
+
+    <div class="calc">
+      <label style="font-size:13px;color:var(--muted)">Profit / Loss (KES)</label>
+      <div id="profitDisplay" class="value">KES 0.00</div>
+    </div>
+
+    <div class="calc">
+      <label style="font-size:13px;color:var(--muted)">Percentage Profit / Loss</label>
+      <div id="percentDisplay" class="value">0.00%</div>
+    </div>
+
+    <div style="margin-top:8px;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;">
+      <div class="actions">
+        <button id="saveBtn" class="btn btn-primary">Save Entry</button>
+      </div>
+      <div>
+        <button id="clearBtn" class="btn btn-ghost">Clear Fields</button>
+      </div>
+    </div>
+
+    <section class="entries" aria-labelledby="saved-heading">
+      <h3 id="saved-heading" style="margin-top:0;margin-bottom:8px;">
+        Saved Entries 
+        <span class="live-text">
+          <span class="live-dot"></span>
+          LIVE
+        </span>
+      </h3>
+      <div style="overflow:auto;">
+        <table aria-describedby="saved-heading">
+          <thead>
+            <tr>
+              <th>Date</th><th>Day</th><th>Product</th><th># Sold</th><th>Price</th><th>Cost/item</th><th>Profit (KES)</th><th>%</th>
+            </tr>
+          </thead>
+          <tbody id="entriesBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="weekly">
+      <div>Weekly Total Profit</div>
+      <div class="amount" id="weeklyTotal">KES 0.00</div>
+    </div>
+  </main>
+
+  <footer>Created by Max • Business Solution © 2025</footer>
+
+  <div id="popup" class="popup" role="status" aria-live="polite"></div>
+
+  <script type="module">
+    // Firebase imports (v10 modular)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      serverTimestamp,
+      query,
+      orderBy,
+      onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+    // ======= Replace with your Firebase config ========
+    const firebaseConfig = {
+      apiKey: "AIzaSyBzDK4KUc5koGLlIEQh8gh_97Ax8qoDG1w",
+      authDomain: "max-movies-84567.firebaseapp.com",
+      projectId: "max-movies-84567",
+      storageBucket: "max-movies-84567.firebasestorage.app",
+      messagingSenderId: "475076851687",
+      appId: "1:475076851687:web:b4531c756ed2f4c39eaf42"
+    };
+    // ==================================================
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const entriesCol = collection(db, "businessEntries");
+
+    // DOM elements
+    const dateEl = document.getElementById("date"); // New Date element
+    const dayEl = document.getElementById("day");
+    const productEl = document.getElementById("product");
+    const numberSoldEl = document.getElementById("sold");
+    const itemPriceEl = document.getElementById("itemPrice");
+    const originalPriceEl = document.getElementById("originalPrice");
+    const profitDisplay = document.getElementById("profitDisplay");
+    const percentDisplay = document.getElementById("percentDisplay");
+    const saveBtn = document.getElementById("saveBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const entriesBody = document.getElementById("entriesBody");
+    const weeklyTotalEl = document.getElementById("weeklyTotal");
+    const popupEl = document.getElementById("popup");
+    const drawer = document.getElementById("drawer");
+    const menuBtn = document.getElementById("menuBtn");
+    const closeDrawerBtn = document.getElementById("closeDrawerBtn"); 
+
+    // Helper to format date as YYYY-MM-DD
+    function formatDate(date) {
+        if (!date) return '';
+        const d = new Date(date);
+        let month = '' + (d.getMonth() + 1);
+        let day = '' + d.getDate();
+        const year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    // Initialize date field to today's date
+    dateEl.value = formatDate(new Date());
+
+    // Drawer toggle
+    menuBtn.addEventListener("click", () => {
+      drawer.classList.toggle("open");
+    });
+
+    // Close drawer button listener
+    closeDrawerBtn.addEventListener("click", () => {
+      drawer.classList.remove("open");
+    });
+
+    // Basic util functions
+    const toNumber = v => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
+    
+    // Function to format KES with sign (+/-)
+    const fmtKES = n => {
+        const value = Number(n);
+        const sign = value >= 0 ? (value === 0 ? '' : '+') : '';
+        return `${sign}${value.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+    };
+
+    // Function to format percentage with sign (+/-)
+    const fmtPct = n => {
+        const value = Number(n);
+        const sign = value >= 0 ? (value === 0 ? '' : '+') : '';
+        return `${sign}${value.toFixed(2)}%`;
+    };
+
+    // Calculation using revenue/cost:
+    // revenue = numberSold * itemPrice
+    // cost = numberSold * originalPrice (if provided, else 0)
+    // profit = revenue - cost
+    // percentage = (profit / revenue) * 100  (if revenue > 0)
+    function calculateAndRender(){
+      const nSold = toNumber(numberSoldEl.value);
+      const itemPrice = toNumber(itemPriceEl.value);
+      const originalPrice = toNumber(originalPriceEl.value);
+
+      const revenue = nSold * itemPrice;
+      const cost = nSold * originalPrice;
+      const profit = revenue - cost;
+      const percent = revenue > 0 ? (profit / revenue) * 100 : 0;
+
+      // Ensure minus sign is present for negative values, and plus sign for positive ones
+      profitDisplay.textContent = `KES ${fmtKES(profit)}`;
+      percentDisplay.textContent = fmtPct(percent);
+
+      // color
+      if (profit > 0){
+        profitDisplay.style.color = "var(--success)";
+        percentDisplay.style.color = "var(--success)";
+      } else if (profit < 0){
+        profitDisplay.style.color = "var(--danger)";
+        percentDisplay.style.color = "var(--danger)";
+      } else {
+        profitDisplay.style.color = "";
+        percentDisplay.style.color = "";
+      }
+
+      return { nSold, itemPrice, originalPrice, revenue, cost, profit, percent };
+    }
+
+    [numberSoldEl, itemPriceEl, originalPriceEl].forEach(el => el.addEventListener("input", calculateAndRender));
+    calculateAndRender();
+
+    // Popup helper
+    function showPopup(message, positive=true){
+      popupEl.textContent = message;
+      popupEl.className = "popup " + (positive ? "success" : "loss");
+      popupEl.style.display = "block";
+      setTimeout(()=> popupEl.style.display = "none", 2500);
+    }
+
+    // Save entry
+    saveBtn.addEventListener("click", async () => {
+      const { nSold, itemPrice, originalPrice, profit, percent, revenue } = calculateAndRender();
+      const product = productEl.value.trim();
+      const day = dayEl.value;
+      const entryDate = dateEl.value; // Capture the selected date
+
+      if (!product){
+        alert("Please enter product name.");
+        return;
+      }
+      if (nSold <= 0){
+        alert("Enter number sold ( > 0 ).");
+        return;
+      }
+      
+      // Get Firebase Timestamp from selected date or use server time if date picker is empty
+      let timestampToSave = serverTimestamp();
+      if (entryDate) {
+          // Parse date string (YYYY-MM-DD) into a Date object for server storage if needed, 
+          // or just pass the ISO string if Firestore handles it better (often easier to just save the date string).
+          // For now, let's keep the serverTimestamp for simplicity in the live table sort, 
+          // but add the chosen date string to the document.
+      }
+      
+      // Create entry object
+      const entry = {
+        day,
+        dateString: entryDate, // Save the selected date string
+        product,
+        numberSold: nSold,
+        itemPrice,
+        originalPrice,
+        revenue,
+        cost: nSold * originalPrice,
+        profit,
+        percent,
+        createdAt: timestampToSave // Keep serverTimestamp for proper sorting
+      };
+
+      try {
+        await addDoc(entriesCol, entry);
+        if (profit > 0) showPopup("🎉 Congratulations! You made a profit.", true);
+        else if (profit < 0) showPopup("⚠️ You made a loss.", false);
+
+        // clear fields but keep day
+        productEl.value = "";
+        numberSoldEl.value = 0;
+        itemPriceEl.value = 0;
+        originalPriceEl.value = "";
+        // Reset date to today after saving
+        dateEl.value = formatDate(new Date()); 
+        calculateAndRender();
+      } catch (e){
+        console.error("Save failed", e);
+        alert("Failed to save. Check console.");
+      }
+    });
+
+    clearBtn.addEventListener("click", () => {
+      productEl.value = "";
+      numberSoldEl.value = 0;
+      itemPriceEl.value = 0;
+      originalPriceEl.value = "";
+      dateEl.value = formatDate(new Date()); // Also clear/reset date
+      calculateAndRender();
+    });
+
+    // Listen live updates and render table + weekly total (current week Mon-Sun)
+    function startOfWeekMonday(d){
+      const dt = new Date(d);
+      const day = dt.getDay(); // 0 sun..6 sat
+      const diff = (day === 0) ? -6 : 1 - day;
+      const start = new Date(dt);
+      start.setDate(dt.getDate() + diff);
+      start.setHours(0,0,0,0);
+      return start;
+    }
+    function sameWeek(a, b){
+      return startOfWeekMonday(a).getTime() === startOfWeekMonday(b).getTime();
+    }
+
+    const q = query(entriesCol, orderBy("createdAt","desc"));
+    onSnapshot(q, snapshot => {
+      const docs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      entriesBody.innerHTML = "";
+      let weeklySum = 0;
+      const now = new Date();
+
+      docs.forEach(doc => {
+        // Use the saved date string if present, otherwise use Firebase timestamp (less specific)
+        let displayDate = doc.dateString || "-";
+        if (displayDate === "-") {
+            if (doc.createdAt && typeof doc.createdAt.toDate === "function"){
+                displayDate = doc.createdAt.toDate().toLocaleDateString(undefined, {
+                    day: 'numeric',
+                    month: 'short',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } else if (doc.createdAt && doc.createdAt.seconds){
+                displayDate = new Date(doc.createdAt.seconds*1000).toLocaleDateString(undefined, {
+                    day: 'numeric',
+                    month: 'short',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+        }
+        
+        const tr = document.createElement("tr");
+        const profitVal = Number(doc.profit) || 0;
+        const percentVal = Number(doc.percent) || 0;
+
+        // Use fmtKES and fmtPct for table display to include the explicit sign
+        tr.innerHTML = `
+          <td data-label="Date">${displayDate}</td>
+          <td data-label="Day">${doc.day || "-"}</td>
+          <td data-label="Product">${doc.product || "-"}</td>
+          <td data-label="# Sold">${doc.numberSold ?? 0}</td>
+          <td data-label="Price">KES ${Number(doc.itemPrice ?? 0).toFixed(2)}</td>
+          <td data-label="Cost/item">${(doc.originalPrice !== undefined && doc.originalPrice !== "") ? ("KES " + Number(doc.originalPrice).toFixed(2)) : "-"}</td>
+          <td data-label="Profit" style="font-weight:700; color:${profitVal >= 0 ? 'var(--success)' : 'var(--danger)'}">KES ${fmtKES(profitVal)}</td>
+          <td data-label="%">${fmtPct(percentVal)}</td>
+        `;
+        entriesBody.appendChild(tr);
+
+        // weekly sum logic
+        let createdDate = null;
+        if (doc.dateString) {
+             createdDate = new Date(doc.dateString);
+        } else if (doc.createdAt && typeof doc.createdAt.toDate === "function") {
+             createdDate = doc.createdAt.toDate();
+        } else if (doc.createdAt && doc.createdAt.seconds) {
+             createdDate = new Date(doc.createdAt.seconds*1000);
+        }
+
+        if (createdDate && sameWeek(createdDate, now)){
+          weeklySum += profitVal;
+        }
+      });
+
+      weeklyTotalEl.textContent = `KES ${Number(weeklySum).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+    });
+  </script>
+</body>
+</html>
